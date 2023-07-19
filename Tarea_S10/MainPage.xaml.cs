@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
+using System.IO;
 
 namespace Tarea_S10
 {
@@ -15,20 +16,46 @@ namespace Tarea_S10
         private string expression = ""; // Variable para almacenar la expresión matemática ingresada por el usuario
 
         private string currentOperator = ""; // Variable para almacenar el operador actual seleccionado
+       
 
-
-        public MainPage()
+    public MainPage()
         {
-            InitializeComponent();
+        
+        InitializeComponent();
+
         }
+        //para el nombre del archivo
+        private static string nombreArchivo = "LogCalcu.txt";
+        //creando la ruta del archivo 
+        private static string ruta = Environment.GetFolderPath(Environment.SpecialFolder.Personal);        
+        private static string rutaCompleta = Path.Combine(ruta, nombreArchivo);
 
         // Función para manejar el evento de clic en los botones numéricos (0-9) y coma (si aplica)
         private void OnNumberButtonClicked(object sender, EventArgs e)
         {
             if (sender is Button button)
             {
+                if (button.Text == "+/-")
+                {
+                    if (!(expression == "" && expression is null))
+                    {
+                        try
+                        {
+                            // va a cambiar toda la operacion de positivo a negativo y viceversa
+                            expression = (Convert.ToDouble(expression) * -1).ToString();
+                            UpdateDisplay();
+                        }
+                        catch (Exception) { }
+
+                    }
+
+                }
+                else
+                {
                 expression += button.Text;
                 UpdateDisplay();
+
+                }
             }
         }
         // Función para manejar el evento de clic en los botones de operadores (+, -, *, /)
@@ -53,8 +80,19 @@ namespace Tarea_S10
                 try
                 {
                     var result = EvaluateExpression(expression);
-                    resultLabel.Text = result.ToString();
-                    expression = result.ToString();
+                    if (result.ToString() != "Infinity")
+                    {
+                        resultLabel.Text = result.ToString();
+                        
+                        expression = result.ToString();
+
+                    }
+                    else
+                    {
+                        resultLabel.Text = "Error";
+                        expression = "";
+                    }
+                    
                 }
                 catch (Exception ex)
                 {
@@ -87,6 +125,37 @@ namespace Tarea_S10
             return Convert.ToDouble(result);
         }
 
+        private void agregarArchivo()
+        {
+            
+            using (StreamWriter escritor = File.AppendText(rutaCompleta))
+            {
+                Console.WriteLine(rutaCompleta);
 
+                int numero = (contarLineas(rutaCompleta) + 1);
+                escritor.WriteLine(numero+". "+ expressionLabel.Text + " = "+ resultLabel.Text);
+
+            }
+        }
+
+        private int contarLineas(string filePath)
+        {
+            string[] lines = File.ReadAllLines(filePath);
+            int lineCount = lines.Length;
+            return lineCount;
+        }
+
+        private void Guardar_Clicked(object sender, EventArgs e)
+        {
+            agregarArchivo();
+
+
+        }
+
+        private async void Ver_Clicked(object sender, EventArgs e)
+        {
+            OnClearButtonClicked(sender, e);
+            await Navigation.PushAsync(new VistaLog());
+        }
     }
 }

@@ -2,7 +2,13 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Tarea_S10.MainPage"
-             BackgroundColor="#24252a">
+             BackgroundColor="#24252a"
+             Title="Calculadora Cool"
+             >
+    <ContentPage.ToolbarItems  BackgroundColor="#2B2C31">
+        <ToolbarItem x:Name="Guardar" Text="guardar" IconImageSource="guardar.png" Order="Primary" Priority="0" Clicked="Guardar_Clicked"  />
+        <ToolbarItem x:Name="Ver" Text="ver" Order="Primary" Priority="1" Clicked="Ver_Clicked"  />
+    </ContentPage.ToolbarItems>
 
     <Grid>
 
