@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using System.IO;
@@ -22,19 +21,37 @@ namespace Tarea_S10
         //creando la ruta del archivo 
         private static string ruta = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
         private static string rutaCompleta = Path.Combine(ruta, nombreArchivo);
+
         public VistaLog()
         {
-            operaciones = new ObservableCollection<string>();
-
             InitializeComponent();
-            //operaciones.Add("Hola Mundo");
-            agregar();
-            string[] lines = File.ReadAllLines(rutaCompleta);
-            int lineas = lines.Length;
-            coleccion.ItemsSource = operaciones;
-            Console.WriteLine(rutaCompleta);
-            Console.WriteLine(lineas);
+            if (File.Exists(rutaCompleta))
+            {
+
+                operaciones = new ObservableCollection<string>();
+                string[] lines = File.ReadAllLines(rutaCompleta);
+                btnReset.Clicked += BtnReset_Clicked;
+                //operaciones.Add("Hola Mundo");
+                agregar();
+                int lineas = lines.Length;
+                coleccion.ItemsSource = operaciones;
+                Console.WriteLine(rutaCompleta);
+                Console.WriteLine(lineas);
+
+            };
+            
         }
+
+        private void BtnReset_Clicked(object sender, EventArgs e)
+        {
+            operaciones.Clear(); // Limpia la pantalla pero no lo borra de la estructura
+
+            if (File.Exists(rutaCompleta)) { File.Delete(rutaCompleta); }
+
+
+        }
+
+
 
         private void agregar()
         {
@@ -43,8 +60,11 @@ namespace Tarea_S10
             {
                 operaciones.Add(line);
             }
-
         }
+
+
+
+
 
     }
     

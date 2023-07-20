@@ -148,14 +148,13 @@ namespace Tarea_S10
         private void Guardar_Clicked(object sender, EventArgs e)
         {
             agregarArchivo();
-
-
         }
 
         private async void Ver_Clicked(object sender, EventArgs e)
         {
             OnClearButtonClicked(sender, e);
             await Navigation.PushAsync(new VistaLog());
+            
         }
     }
 }
